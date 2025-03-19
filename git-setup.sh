@@ -44,7 +44,8 @@ read -p "Add this key to your GitHub account. Press enter to continue:"
 echo "Setting Git configuration..."
 git config --global user.name "Yejun Jang" || handle_error "Failed to set Git username"
 git config --global user.email "jangyejun@gmail.com" || handle_error "Failed to set Git email"
-echo "Git credentials have been set!"
+git config pull.rebase false
+echo "Git has been configured!"
 
 echo "Adding GitHub to known hosts..."
 ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts || handle_error "Failed to add GitHub to known hosts"
