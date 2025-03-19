@@ -52,20 +52,28 @@ ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts || handle_error "Failed 
 echo "Changing to root directory..."
 cd /root/ || handle_error "Failed to change to root directory"
 
-if [ -d "llm-fuzz" ]; then
-    echo "Removing existing llm-fuzz directory..."
-    rm -rf llm-fuzz/ || handle_error "Failed to remove llm-fuzz directory"
-fi
-
 # Validate repository name
 read -p "Enter the repository name: " repo_name
 if [ -z "$repo_name" ]; then
     handle_error "Repository name cannot be empty"
 fi
 
-echo "Cloning repository $repo_name..."
-git clone -b dev git@github.com:codingJang/$repo_name.git || handle_error "Failed to clone repository"
-echo "Repository $repo_name cloned successfully!"
+# If folder exists
+if [ -d "$repo_name" ]; then
+    read -p "The folder /root/$repo_name/ already exists. Overwrite? (y/n) " overwrite
+    if [ "$overwrite" = "y" ] || [ "$overwrite" = "Y" ]; then
+        echo "removing folder $repo_name before cloning"
+        rm -rf "$repo_name/" || handle_error "Failed to remove folder"
+        echo "Cloning repository $repo_name..."
+        git clone -b dev git@github.com:codingJang/$repo_name.git || handle_error "Failed to clone repository"
+    else
+        git clone -b dev git@github.com:codingJang/$repo_name.git || handle_error "Failed to clone repository. Why not try overwriting?"
+    fi
+else
+    git clone -b dev git@github.com:codingJang/$repo_name.git || handle_error "Failed to clone repository"
+fi
+echo "Successfully cloned repository $repo_name!"
+
 
 echo "Changing to repository directory..."
 cd /root/$repo_name || handle_error "Failed to change to repository directory"
