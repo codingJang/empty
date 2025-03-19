@@ -17,6 +17,8 @@ read -p "Enter the repository name: " repo_name
 git clone -b dev git@github.com:codingJang/$repo_name.git
 echo "Repository $repo_name cloned successfully!"
 cd /root/$repo_name || { echo "Failed to change directory. Exiting."; exit 1; }
+echo "Fixing any broken pip installations..."
+pip install --fix-broken-install
 if [ -f "requirements.txt" ]; then
     echo "Installing dependencies from requirements.txt..."
     pip install --no-input -r requirements.txt
