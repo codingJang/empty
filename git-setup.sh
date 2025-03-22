@@ -67,8 +67,6 @@ if [ -d "$repo_name" ]; then
         rm -rf "$repo_name/" || handle_error "Failed to remove folder"
         echo "Cloning repository $repo_name..."
         git clone -b dev git@github.com:codingJang/$repo_name.git || handle_error "Failed to clone repository"
-    else
-        git clone -b dev git@github.com:codingJang/$repo_name.git || handle_error "Failed to clone repository. Why not try overwriting?"
     fi
 else
     git clone -b dev git@github.com:codingJang/$repo_name.git || handle_error "Failed to clone repository"
@@ -102,8 +100,8 @@ source ~/.bashrc || handle_error "Failed to source ~/.bashrc"
 # Get tunnel name and start VS Code tunnel
 read -p "Enter VS Code tunnel name (leave empty to skip): " tunnel_name
 if [ -n "$tunnel_name" ]; then
-    echo "Starting VS Code tunnel with name: $tunnel_name..."
-    code tunnel --name "$tunnel_name" || handle_error "Failed to start VS Code tunnel"
+    echo "Starting VS Code tunnel with name: $tunnel_name inside a tmux session..."
+    tmux new-session -A -s code_tunnel \; send -t code_tunnel "nohup code tunnel --name \"$tunnel_name\" &" ENTER \; detach -s code_tunnel || handle_error "Failed to start VS Code tunnel"
 fi
 
 echo "Setup completed successfully!"
