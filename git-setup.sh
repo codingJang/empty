@@ -77,6 +77,9 @@ echo "Successfully cloned repository $repo_name!"
 echo "Changing to repository directory..."
 cd /root/$repo_name || handle_error "Failed to change to repository directory"
 
+echo "Fixing any broken pip installations..."
+pip install --fix-broken-install
+
 if [ -f "requirements.txt" ]; then
     echo "Installing dependencies from requirements.txt..."
     pip install --no-input -r requirements.txt || handle_error "Failed to install Python dependencies"
